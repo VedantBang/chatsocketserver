@@ -3,9 +3,17 @@ const WebSocketServer = require('websocket').server;
 
 const httpServer = http.createServer();
 const port = process.env.PORT || 8765;
-httpServer.listen(port, () => {
-	console.log(`Server running on port: ${port}`);
-});
+
+try{
+	httpServer.listen(port, () => {
+		console.log(`Server running on port: ${port}`);
+	});
+} catch(err){
+	console.log("[ERROR]");
+	console.log("Please check if the server has permission to run on the host provided.");
+	process.exit(0);
+}
+
 
 const wss = new WebSocketServer({ httpServer });
 
@@ -21,7 +29,7 @@ wss.on('request', req => {
 	conn.on('message', msg => {
 		console.log(`[MESSAGE] ${msg.utf8Data}`);
 		wss.connections.forEach( client => {
-			client.sendUTF(msg.utf8Data);
+			if( client.remoteAddress !== conn.remoteAddress ) client.sendUTF(msg.utf8Data);
 		});
 	});
 });

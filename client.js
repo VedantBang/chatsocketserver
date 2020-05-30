@@ -36,7 +36,17 @@ client.on('connect', conn => {
 
 rl.question('Enter a nickname: ', answer => {
 	username = answer || (`user${Math.floor(Math.random() * 100)}`);
-	client.connect('ws://chatsocketserver.herokuapp.com/');
+	let context = process.argv[2] || 'heroku';
+	let url;
+	switch(context){
+		case 'heroku':
+			url = 'ws://chatsocketserver.herokuapp.com/';
+			break;
+		default :
+			url = `ws://${context}:8765`;
+			break;
+	}
+	client.connect(url);
 });
 
 
