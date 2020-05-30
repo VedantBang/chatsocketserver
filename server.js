@@ -15,6 +15,7 @@ function relayMessage(data,ws){
 
 wss.on('connection', function connection(ws){
 	ws.on('message', function resp(data){
+		console.log("Received: " + data);
 		relayMessage(data,ws);
 	});
 });
