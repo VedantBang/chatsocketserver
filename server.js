@@ -9,6 +9,7 @@ function relayMessage(data,ws){
 	wss.clients.forEach(function each(client) {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
         client.send(data);
+        console.log("data sent");
       }
     });
 }
