@@ -1,6 +1,6 @@
 const WebSocket = require('ws');
  
-const ws = new WebSocket('ws://www.host.com/path');
+const ws = new WebSocket('https://chatsocketserver.herokuapp.com/');
  
 const readline = require('readline');
 const rl = readline.createInterface({
