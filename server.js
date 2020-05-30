@@ -21,6 +21,7 @@ wss.on('connection', function connection(ws){
 	});
 });
 
-server.listen(process.env.PORT || 8765, ()=>{
-	console.log("Started on port: " + process.env.PORT);
+const port = process.env.PORT || 8765;
+server.listen(port, ()=>{
+	console.log("Started on port: " + port);
 });
