@@ -36,7 +36,7 @@ client.on('connect', conn => {
 
 rl.question('Enter a nickname: ', answer => {
 	username = answer || (`user${Math.floor(Math.random() * 100)}`);
-	client.connect('ws://localhost:8765/');
+	client.connect('ws://chatsocketserver.herokuapp.com/');
 });
 
 
