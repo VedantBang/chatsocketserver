@@ -9,7 +9,7 @@ const rl = readline.createInterface({
 });
 
 rl.question("Enter a nickname: ", function(answer) {
-	const nick = answer || ("User"+((Math.floor(Math.random()*10000)).toString()));
+	const nick = answer || ("user"+((Math.floor(Math.random()*10000)).toString()));
 
 	ws.on('message', function incoming(data) {
   		console.log(data);
