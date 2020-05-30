@@ -1,29 +1,42 @@
-const WebSocket = require('ws');
- 
-const ws = new WebSocket('https://chatsocketserver.herokuapp.com/');
- 
 const readline = require('readline');
 const rl = readline.createInterface({
-  	input: process.stdin,
-  	output: process.stdout
+	input: process.stdin,
+	output: process.stdout
 });
 
-rl.question("Enter a nickname: ", function(answer) {
-	const nick = answer || ("user"+((Math.floor(Math.random()*10000)).toString()));
+const WebSocketClient = require('websocket').client;
+const client = new WebSocketClient();
 
-	console.log("Welcome to Chat Server, powered by WebSockets");
-	console.log(`Connected as ${nick}`);
-	console.log("Type your messages directly into process.stdin");
+let username;
 
-	ws.on('message', function incoming(data) {
-  		console.log(data);
-	});
-
-	ws.on('open', function open() {
-  		rl.on('line', function getData(data){
-  			ws.send(`[${nick}]: ${data}`);
-  		});
-	});
-
+client.on('connectFailed', error => {
+	console.log(`[ERROR] Error while connecting: ${error.toString()}`);
 });
- 
+
+client.on('connect', conn => {
+	conn.on('error', error => {
+		console.log(`[ERROR] Error in connection: ${error.toString()}`);
+	});
+	conn.on('close', () => {
+		console.log('Disconnected');
+	});
+	conn.on('message', msg => {
+		if(msg.type === 'utf8') console.log(msg.utf8Data);
+	});
+	rl.on('SIGINT', () => {
+		conn.close();
+		console.log('Disconnected');
+		process.exit(0);
+	});
+	rl.on('line', data => {
+		conn.send(`[${username}] ${data}`);
+	});	
+});
+
+
+rl.question('Enter a nickname: ', answer => {
+	username = answer || (`user${Math.floor(Math.random() * 100)}`);
+	client.connect('ws://localhost:8765/');
+});
+
+
