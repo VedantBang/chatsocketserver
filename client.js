@@ -9,6 +9,14 @@ const client = new WebSocketClient();
 
 let username;
 
+const commands = {
+	'/disconnect': function(conn){
+		conn.close();
+		console.log('Disconnected');
+		process.exit(0);
+	}
+}
+
 client.on('connectFailed', error => {
 	console.log(`[ERROR] Error while connecting: ${error.toString()}`);
 });
@@ -29,7 +37,8 @@ client.on('connect', conn => {
 		process.exit(0);
 	});
 	rl.on('line', data => {
-		conn.send(`[${username}] ${data}`);
+		if(commands.hasOwnProperty(data)) commands[data](conn);
+		else conn.send(`[${username}] ${data}`);
 	});	
 });
 
