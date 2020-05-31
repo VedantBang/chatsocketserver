@@ -11,6 +11,9 @@ let username;
 
 const commands = require('./commands/client');
 
+rl.setPrompt('>');
+const preserveCursor = true;
+
 client.on('connectFailed', error => {
 	console.log(`[ERROR] Error while connecting: ${error.toString()}`);
 });
@@ -23,7 +26,8 @@ client.on('connect', conn => {
 		console.log('Disconnected');
 	});
 	conn.on('message', msg => {
-		if(msg.type === 'utf8') console.log(msg.utf8Data);
+		if(msg.type === 'utf8') console.log(`\n${msg.utf8Data}`);
+		rl.prompt({ preserveCursor });
 	});
 	rl.on('SIGINT', () => {
 		conn.close();
@@ -33,9 +37,9 @@ client.on('connect', conn => {
 	rl.on('line', data => {
 		if(commands.hasOwnProperty(data)) commands[data](conn);
 		else conn.send(`[${username}] ${data}`);
+		rl.prompt({ preserveCursor });
 	});	
 });
-
 
 rl.question('Enter a nickname: ', answer => {
 	username = answer || (`user${Math.floor(Math.random() * 100)}`);
