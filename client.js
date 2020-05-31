@@ -20,10 +20,10 @@ client.on('connectFailed', error => {
 
 client.on('connect', conn => {
 	conn.on('error', error => {
-		console.log(`[ERROR] Error in connection: ${error.toString()}`);
+		console.log(`\n[ERROR] Error in connection: ${error.toString()}`);
 	});
 	conn.on('close', () => {
-		console.log('Disconnected');
+		console.log('\nDisconnected');
 	});
 	conn.on('message', msg => {
 		if(msg.type === 'utf8') console.log(`\n${msg.utf8Data}`);
@@ -31,7 +31,7 @@ client.on('connect', conn => {
 	});
 	rl.on('SIGINT', () => {
 		conn.close();
-		console.log('Disconnected');
+		console.log('\nDisconnected');
 		process.exit(0);
 	});
 	rl.on('line', data => {
