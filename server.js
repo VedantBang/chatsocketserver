@@ -16,9 +16,11 @@ try{
 
 
 const wss = new WebSocketServer({ httpServer });
+const commands = require('./commands/server');
 
 wss.on('request', req => {
 	const conn = req.accept(null, req.origin);
+
 	console.log(`[NETWORK] Connected to ${conn.remoteAddress}`);
 	conn.sendUTF('[SERVER] Connection estabilished');
 
@@ -28,6 +30,7 @@ wss.on('request', req => {
 
 	conn.on('message', msg => {
 		console.log(`[MESSAGE] ${msg.utf8Data}`);
+
 		wss.connections.forEach( client => {
 			if( client.remoteAddress !== conn.remoteAddress ) client.sendUTF(msg.utf8Data);
 		});

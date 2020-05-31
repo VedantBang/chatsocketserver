@@ -9,13 +9,7 @@ const client = new WebSocketClient();
 
 let username;
 
-const commands = {
-	'/disconnect': function(conn){
-		conn.close();
-		console.log('Disconnected');
-		process.exit(0);
-	}
-}
+const commands = require('./commands/client');
 
 client.on('connectFailed', error => {
 	console.log(`[ERROR] Error while connecting: ${error.toString()}`);
