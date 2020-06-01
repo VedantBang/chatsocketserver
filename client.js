@@ -53,7 +53,7 @@ rl.question('Enter a nickname: ', answer => {
 			url = `ws://${context}:8765`;
 			break;
 	}
-	client.connect(url);
+	client.connect(url,null,null,{ username });
 });
 
 
