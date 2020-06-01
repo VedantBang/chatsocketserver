@@ -1,5 +1,6 @@
-module.exports = (wss,message) => {
+module.exports = (wss,message,fromServer) => {
 	wss.connections.forEach( client => {
-		if( client.remoteAddress !== conn.remoteAddress ) client.sendUTF(`[SERVER] ${message}`);
+		let prefix = fromServer ? '[SERVER] ' : '';
+		if( client.remoteAddress !== conn.remoteAddress ) client.sendUTF(`${prefix}${message}`);
 	});
 }

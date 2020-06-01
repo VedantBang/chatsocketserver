@@ -30,19 +30,19 @@ wss.on('request', req => {
 	console.log(`[NETWORK] Connected to ${conn.remoteAddress}`);
 	conn.sendUTF('[SERVER] Connection estabilished');
 	// notify all other connections of new connection
-	relayMessage(wss,`${conn.username} has joined`);
+	relayMessage(wss,`${conn.username} has joined`, true);
 	// handle disconnect
 	conn.on('close', (code,desc) => {
 		// log message
 		console.log(`[NETWORK] ${conn.remoteAddress} disconnected`);
 		// notify all other connections of disconnect
-		relayMessage(wss,`[${conn.username} has disconnected`);
+		relayMessage(wss, `[${conn.username} has disconnected`, true);
 	});
 	// on receiving message from a connection
 	conn.on('message', msg => {
 		// log message
 		console.log(`[MESSAGE] ${msg.utf8Data}`);
 		// relay to all other connections
-		relayMessage(wss,msg.utf8Data);
+		relayMessage(wss, msg.utf8Data, false);
 	});
 });
