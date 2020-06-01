@@ -16,33 +16,36 @@ try{
 
 // creating the server
 const wss = new WebSocketServer({ httpServer });
-const commands = require('./commands/server');
-const setUsername = require('./functions/setUsername');
-const relayMessage = require('./functions/relayMessage');
+const FUNC = new (require('./functions/class'))(wss);
 
 // on receiving new connection request
 wss.on('request', req => {
 	// accept the connection
 	const conn = req.accept(null, req.origin);
+
 	// middleware - get the username from request header and attach to connection
-	setUsername(req,conn);
+	FUNC.setUsername(req,conn);
+
 	// log messages
 	console.log(`[NETWORK] Connected to ${conn.remoteAddress}`);
 	conn.sendUTF('[SERVER] Connection estabilished');
+
 	// notify all other connections of new connection
-	relayMessage(wss,conn,`${conn.username} has joined`, true);
+	FUNC.relayMessage(conn,`${conn.username} has joined`, true);
+
 	// handle disconnect
 	conn.on('close', (code,desc) => {
 		// log message
 		console.log(`[NETWORK] ${conn.remoteAddress} disconnected`);
 		// notify all other connections of disconnect
-		relayMessage(wss,conn, `[${conn.username}] has disconnected`, true);
+		FUNC.relayMessage(conn, `[${conn.username}] has disconnected`, true);
 	});
+
 	// on receiving message from a connection
 	conn.on('message', msg => {
 		// log message
 		console.log(`[MESSAGE] ${msg.utf8Data}`);
 		// relay to all other connections
-		relayMessage(wss,conn, msg.utf8Data, false);
+		FUNC.relayMessage(conn, msg.utf8Data, false);
 	});
 });
