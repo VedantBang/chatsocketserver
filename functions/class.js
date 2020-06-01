@@ -1,4 +1,4 @@
-module.exports = class Func{
+module.exports = class Func {
 	constructor(wss){
 		this.wss = wss;
 	}
